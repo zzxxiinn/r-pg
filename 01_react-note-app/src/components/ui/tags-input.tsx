@@ -210,8 +210,6 @@ export function TagsInput({
     []
   );
 
-  console.log('check value: -->', value);
-
   return (
     <div
       {...props}
