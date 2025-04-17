@@ -11,17 +11,19 @@ import {
 } from './ui/form';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
-import { TagsInput } from './ui/tags-input';
 import { Textarea } from './ui/textarea';
 import { Link } from 'react-router';
-import { NoteData, NoteDataSchema } from '@/shemas/note';
+import { NoteData, NoteDataSchema, Tag } from '@/shemas/note';
 import { v4 as uuidV4 } from 'uuid';
+import { TagsSelector } from './ui/tags-selector';
 
 type NoteFormProps = {
   onSubmit: (data: NoteData) => void;
+  onAddTag: (tag: Tag) => void;
+  availableTags: Tag[];
 };
 
-export function NoteForm({ onSubmit }: NoteFormProps) {
+export function NoteForm({ onSubmit, onAddTag, availableTags }: NoteFormProps) {
   const form = useForm<NoteData>({
     resolver: zodResolver(NoteDataSchema),
     defaultValues: {
@@ -56,17 +58,22 @@ export function NoteForm({ onSubmit }: NoteFormProps) {
               <FormItem>
                 <FormLabel htmlFor='tags'>Tags</FormLabel>
                 <FormControl>
-                  <TagsInput
-                    inputId='tags'
-                    onValueChange={(value: string[]) => {
+                  <TagsSelector
+                    id='tags'
+                    selected={field.value}
+                    onSelectChange={(value) => {
                       field.onChange(
-                        value.map((val) => ({
-                          id: uuidV4(),
-                          label: val,
-                        }))
+                        value.map((tag) => ({ id: tag.id, label: tag.label }))
                       );
                     }}
-                    value={field.value.map((t) => t.label)}
+                    options={availableTags}
+                    onCreateOption={(label) => {
+                      console.log('onCreateOption');
+                      const newTag = { id: uuidV4(), label };
+                      onAddTag(newTag);
+
+                      field.onChange([...field.value, newTag]);
+                    }}
                   />
                 </FormControl>
                 <FormDescription>
