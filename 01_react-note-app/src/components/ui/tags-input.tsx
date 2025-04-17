@@ -15,6 +15,7 @@ interface TagsInputProps extends React.ComponentPropsWithRef<'div'> {
   placeholder?: string;
   max?: number;
   min?: number;
+  inputId?: string;
 }
 
 export function TagsInput({
@@ -26,6 +27,7 @@ export function TagsInput({
   min,
   dir,
   ref,
+  inputId,
   ...props
 }: TagsInputProps) {
   const [activeIndex, setActiveIndex] = React.useState(-1);
@@ -133,8 +135,6 @@ export function TagsInput({
         setActiveIndex(newIndex);
       };
       const target = e.currentTarget;
-
-      // ? Suggest : the multi select should support the same pattern
 
       switch (e.key) {
         case 'ArrowLeft': {
@@ -254,6 +254,7 @@ export function TagsInput({
         </Badge>
       ))}
       <Input
+        id={inputId}
         tabIndex={0}
         aria-label='input tag'
         value={inputValue}

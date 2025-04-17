@@ -1,10 +1,15 @@
 import { NoteForm } from '@/components/NoteForm';
+import { NoteData } from '@/shemas/note';
 
-export function NewNote() {
+type NewNoteProps = {
+  onSubmit: (datat: NoteData) => void;
+};
+
+export function NewNote({ onSubmit }: NewNoteProps) {
   return (
     <>
       <h1 className='flex w-full'>New Note</h1>
-      <NoteForm />
+      <NoteForm onSubmit={onSubmit} />
     </>
   );
 }
