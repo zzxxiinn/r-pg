@@ -30,7 +30,7 @@ interface TagsSelectorProps extends React.ComponentProps<'button'> {
   selected: Option[];
   onSelectChange: (value: Option[]) => void;
   options: Option[];
-  onCreateOption: (value: string) => void;
+  onCreateOption?: (value: string) => void;
   placeholder?: string;
   max?: number;
   min?: number;
@@ -76,27 +76,6 @@ export function TagsSelector({
     [selected]
   );
 
-  // const handlePaste = React.useCallback(
-  //   (e: React.ClipboardEvent<HTMLInputElement>) => {
-  //     e.preventDefault();
-  //     const tags = e.clipboardData.getData('text').split(SPLITTER_REGEX);
-  //     const newValue = [...selected];
-  //     tags.forEach((item) => {
-  //       const parsedItem = item.replaceAll(FORMATTING_REGEX, '').trim();
-  //       if (
-  //         parsedItem.length > 0 &&
-  //         !newValue.includes(parsedItem) &&
-  //         newValue.length < max
-  //       ) {
-  //         newValue.push(parsedItem);
-  //       }
-  //     });
-  //     onSelectChange(newValue);
-  //     setInputValue('');
-  //   },
-  //   [selected]
-  // );
-
   React.useEffect(() => {
     const VerifyDisable = () => {
       if (selected.length - 1 >= min) {
@@ -117,15 +96,13 @@ export function TagsSelector({
     async (e: React.KeyboardEvent<HTMLInputElement>) => {
       e.stopPropagation();
 
-      // const target = e.currentTarget;
-      // console.log(e.key);
-
       switch (e.key) {
         case 'Enter': {
           if (inputValue.trim() !== '') {
             e.preventDefault();
 
             if (options.find((tag) => tag.label === inputValue)) return;
+            if (!onCreateOption) return;
             onCreateOption(inputValue);
             setInputValue('');
           }
@@ -203,8 +180,12 @@ export function TagsSelector({
           />
           <CommandList className='max-h-60'>
             <CommandEmpty>
-              . No results found.
-              <br /> Press 'Enter' to add.
+              No results found.
+              {onCreateOption && (
+                <>
+                  <br /> Press 'Enter' to add.
+                </>
+              )}
             </CommandEmpty>
             <CommandGroup>
               {options!.map(({ id, label }: Option) => (

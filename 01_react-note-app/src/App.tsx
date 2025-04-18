@@ -4,6 +4,7 @@ import { useLocalStorage } from './lib/useLocalStorage';
 import { useMemo } from 'react';
 import type { NoteData, RawNote, Tag } from './shemas/note';
 import { v4 as uuidV4 } from 'uuid';
+import { NoteList } from './pages/NoteList';
 
 function App() {
   const [notes, setNotes] = useLocalStorage<RawNote[]>('NOTES', []);
@@ -33,10 +34,11 @@ function App() {
 
   return (
     <div className='w-full my-4 px-4 '>
-      <pre>NOTES: {JSON.stringify(notes)}</pre>
-      <pre>TAGS: {JSON.stringify(tags)}</pre>
       <Routes>
-        <Route path='/' element={<h1>Hi</h1>} />
+        <Route
+          path='/'
+          element={<NoteList notes={notesWithTags} availableTags={tags} />}
+        />
         <Route
           path='/new'
           element={
