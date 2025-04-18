@@ -126,17 +126,19 @@ export function NoteList({ availableTags, notes }: NoteListProps) {
 
 function NoteCard({ id, title, tags }: SimplifiedNote) {
   return (
-    <Card id={id} className='cursor-pointer'>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription className='flex gap-2 mt-1'>
-          {tags.map(({ id, label }) => (
-            <Badge id={id} key={id} variant='secondary'>
-              {label}
-            </Badge>
-          ))}
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <Link to={`/note/${id}`}>
+      <Card id={id} className='transition-shadow shadow-none hover:shadow-sm'>
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription className='flex gap-2 mt-1'>
+            {tags.map(({ id, label }) => (
+              <Badge id={id} key={id} variant='secondary'>
+                {label}
+              </Badge>
+            ))}
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    </Link>
   );
 }
