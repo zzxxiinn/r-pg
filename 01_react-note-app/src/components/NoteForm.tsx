@@ -1,5 +1,5 @@
 'use client';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
@@ -12,7 +12,7 @@ import {
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { NoteData, NoteDataSchema, Tag } from '@/shemas/note';
 import { v4 as uuidV4 } from 'uuid';
 import { TagsSelector } from './ui/tags-selector';
@@ -24,6 +24,7 @@ type NoteFormProps = {
 };
 
 export function NoteForm({ onSubmit, onAddTag, availableTags }: NoteFormProps) {
+  const navigate = useNavigate();
   const form = useForm<NoteData>({
     resolver: zodResolver(NoteDataSchema),
     defaultValues: {
@@ -33,9 +34,17 @@ export function NoteForm({ onSubmit, onAddTag, availableTags }: NoteFormProps) {
     },
   });
 
+  const handleSubmit: SubmitHandler<NoteData> = (data) => {
+    onSubmit(data);
+    navigate('..');
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='sapce-y-8 w-3xl'>
+      <form
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className='sapce-y-8 w-3xl'
+      >
         <div className='grid grid-cols-2 gap-2 w-full'>
           <FormField
             control={form.control}

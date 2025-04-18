@@ -201,7 +201,7 @@ export function TagsSelector({
             onKeyDown={handleKeyDown}
             onChangeCapture={handleInputChange}
           />
-          <CommandList>
+          <CommandList className='max-h-60'>
             <CommandEmpty>
               . No results found.
               <br /> Press 'Enter' to add.
