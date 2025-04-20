@@ -21,17 +21,20 @@ type NoteFormProps = {
   onSubmit: (data: NoteData) => void;
   onAddTag: (tag: Tag) => void;
   availableTags: Tag[];
-};
+} & Partial<NoteData>;
 
-export function NoteForm({ onSubmit, onAddTag, availableTags }: NoteFormProps) {
+export function NoteForm({
+  onSubmit,
+  onAddTag,
+  availableTags,
+  title = '',
+  markdown = '',
+  tags = [],
+}: NoteFormProps) {
   const navigate = useNavigate();
   const form = useForm<NoteData>({
     resolver: zodResolver(NoteDataSchema),
-    defaultValues: {
-      title: '',
-      tags: [],
-      markdown: '',
-    },
+    defaultValues: { title, tags, markdown },
   });
 
   const handleSubmit: SubmitHandler<NoteData> = (data) => {
@@ -110,11 +113,9 @@ export function NoteForm({ onSubmit, onAddTag, availableTags }: NoteFormProps) {
         </div>
         <div className='flex justify-end w-full gap-2 my-2'>
           <Button type='submit'>Submit</Button>
-          <Link to='..'>
-            <Button type='reset' variant='secondary'>
-              Cancel
-            </Button>
-          </Link>
+          <Button asChild variant='secondary'>
+            <Link to='..'>Cancel</Link>
+          </Button>
         </div>
       </form>
     </Form>

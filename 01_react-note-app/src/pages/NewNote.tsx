@@ -2,7 +2,7 @@ import { NoteForm } from '@/components/NoteForm';
 import { NoteData, Tag } from '@/shemas/note';
 
 type NewNoteProps = {
-  onSubmit: (datat: NoteData) => void;
+  onSubmit: (data: NoteData) => void;
   onAddTag: (tag: Tag) => void;
   availableTags: Tag[];
 };

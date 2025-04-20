@@ -1,5 +1,5 @@
 import { Note } from '@/shemas/note';
-import { Navigate, useParams } from 'react-router';
+import { Navigate, Outlet, useOutletContext, useParams } from 'react-router';
 
 type NoteLayoutProps = {
   notes: Note[];
@@ -11,5 +11,9 @@ export function NoteLayout({ notes }: NoteLayoutProps) {
 
   if (!note) return <Navigate to='/' replace />;
 
-  return <></>;
+  return <Outlet context={note} />;
+}
+
+export function useNote() {
+  return useOutletContext<Note>();
 }

@@ -7,20 +7,21 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from '@/components/ui/form';
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { TagsSelector } from '@/components/ui/tags-selector';
-import { Note, Tag, tagSchema } from '@/shemas/note';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMemo } from 'react';
-import { useForm } from 'react-hook-form';
+import { Tag } from '@/shemas/note';
+import { X } from 'lucide-react';
+import { PropsWithChildren, useMemo, useState } from 'react';
 import { Link } from 'react-router';
-import { z } from 'zod';
 
 type SimplifiedNote = {
   tags: Tag[];
@@ -30,26 +31,22 @@ type SimplifiedNote = {
 
 type NoteListProps = {
   availableTags: Tag[];
-  notes: Note[];
+  notes: SimplifiedNote[];
+  onUpdateTag: (id: string, label: string) => void;
+  onDeleteTag: (id: string) => void;
 };
 
-export function NoteList({ availableTags, notes }: NoteListProps) {
-  const listForm = z.object({
-    title: z.string(),
-    tags: z.array(tagSchema),
-  });
-  const form = useForm<z.infer<typeof listForm>>({
-    resolver: zodResolver(listForm),
-    defaultValues: {
-      title: '',
-      tags: [],
-    },
-  });
+export function NoteList({
+  availableTags,
+  notes,
+  onUpdateTag,
+  onDeleteTag,
+}: NoteListProps) {
+  const [title, setTitle] = useState('');
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
 
   const filteredNotes = useMemo(() => {
     return notes.filter((note) => {
-      const title = form.watch('title');
-      const selectedTags = form.watch('tags');
       return (
         (title === '' ||
           note.title.toLowerCase().includes(title.toLowerCase())) &&
@@ -59,7 +56,7 @@ export function NoteList({ availableTags, notes }: NoteListProps) {
           ))
       );
     });
-  }, [form.watch]);
+  }, [title, selectedTags, notes]);
 
   return (
     <>
@@ -69,47 +66,41 @@ export function NoteList({ availableTags, notes }: NoteListProps) {
           <Link to='/new'>
             <Button>Create</Button>
           </Link>
-          <Button variant='secondary'>Edit Tags</Button>
+
+          <EditTagsModal
+            availableTags={availableTags}
+            onDeleteTag={onDeleteTag}
+            onUpdateTag={onUpdateTag}
+          >
+            <Button variant='secondary'>Edit Tags</Button>
+          </EditTagsModal>
         </div>
       </h1>
-      <Form {...form}>
-        <div className='grid grid-cols-2 gap-2 w-full'>
-          <FormField
-            control={form.control}
-            name='title'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor='title'>Title</FormLabel>
-                <FormControl>
-                  <Input id='title' placeholder='shadcn' {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='tags'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor='tags'>Tags</FormLabel>
-                <FormControl>
-                  <TagsSelector
-                    id='tags'
-                    selected={field.value}
-                    onSelectChange={(value) => {
-                      field.onChange(
-                        value.map((tag) => ({ id: tag.id, label: tag.label }))
-                      );
-                    }}
-                    options={availableTags}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
+      <div className='flex gap-2 w-full'>
+        <div className='grid w-full max-w-sm items-center gap-1.5'>
+          <Label htmlFor='title'>Title</Label>
+          <Input
+            id='title'
+            placeholder='shadcn'
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
           />
         </div>
-      </Form>
+
+        <div className='grid w-full max-w-sm items-center gap-1.5'>
+          <Label htmlFor='tags'>Tags</Label>
+          <TagsSelector
+            id='tags'
+            selected={selectedTags}
+            onSelectChange={(value) => {
+              setSelectedTags(
+                value.map((tag) => ({ id: tag.id, label: tag.label }))
+              );
+            }}
+            options={availableTags}
+          />
+        </div>
+      </div>
       <section className='my-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
         {filteredNotes.map((note) => (
           <NoteCard
@@ -132,7 +123,7 @@ function NoteCard({ id, title, tags }: SimplifiedNote) {
           <CardTitle>{title}</CardTitle>
           <CardDescription className='flex gap-2 mt-1'>
             {tags.map(({ id, label }) => (
-              <Badge id={id} key={id} variant='secondary'>
+              <Badge key={id} variant='secondary'>
                 {label}
               </Badge>
             ))}
@@ -140,5 +131,59 @@ function NoteCard({ id, title, tags }: SimplifiedNote) {
         </CardHeader>
       </Card>
     </Link>
+  );
+}
+
+type EditTagsModalProps = {
+  availableTags: Tag[];
+  onDeleteTag: (id: string) => void;
+  onUpdateTag: (id: string, label: string) => void;
+};
+
+function EditTagsModal({
+  children,
+  availableTags,
+  onDeleteTag,
+  onUpdateTag,
+}: PropsWithChildren<EditTagsModalProps>) {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className='sm:max-w-[425px] max-h-[600px] flex flex-col'>
+        <DialogHeader className='mb-2 shrink-0'>
+          <DialogTitle>Edit Tags</DialogTitle>
+          <DialogDescription>
+            Make changes to your profile here. Click save when you're done.
+          </DialogDescription>
+        </DialogHeader>
+        <div className='grid gap-4 h-full -mx-2'>
+          {availableTags.length && (
+            <ScrollArea className='h-96 w-full'>
+              {availableTags.map((tag) => (
+                <div
+                  className='flex justify-center gap-4 my-2 px-2'
+                  key={tag.id}
+                >
+                  <Input
+                    id='name'
+                    value={tag.label}
+                    className='w-full'
+                    onChange={(e) => onUpdateTag(tag.id, e.target.value)}
+                  />
+                  <Button
+                    variant='destructive'
+                    size='icon'
+                    className='shrink-0'
+                    onClick={() => onDeleteTag(tag.id)}
+                  >
+                    <X />
+                  </Button>
+                </div>
+              ))}
+            </ScrollArea>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

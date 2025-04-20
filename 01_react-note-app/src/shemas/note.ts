@@ -8,8 +8,8 @@ export type Tag = z.infer<typeof tagSchema>;
 
 export const NoteDataSchema = z.object({
   title: z.string().nonempty('Title is required!'),
-  tags: z.array(tagSchema).nonempty('Please at lease one item'),
   markdown: z.string().nonempty('Description is required'),
+  tags: z.array(tagSchema),
 });
 export type NoteData = z.infer<typeof NoteDataSchema>;
 
