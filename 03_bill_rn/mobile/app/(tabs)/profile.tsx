@@ -8,8 +8,7 @@ import { useAuth } from '../_layout';
 
 export default function Profile() {
   // const [session, setSession] = useState<Session | null>(null);
-  const session = useAuth((state: any) => state.session);
-  console.log(session, session.user);
+  const session = useAuth((state) => state.session);
 
   return (
     <View>

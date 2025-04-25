@@ -13,13 +13,20 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
 import '../global.css';
+import '../lib/polifill';
 
 import { create } from 'zustand';
 import { supabase } from '@/lib/supabase';
+import { Session } from '@supabase/supabase-js';
 
-export const useAuth = create((set) => ({
+type AuthState = {
+  session: Session | null;
+  setSession: (session: Session | null) => void;
+};
+
+export const useAuth = create<AuthState>((set) => ({
   session: null,
-  setSession: (session: any) => set({ session }),
+  setSession: (session) => set({ session }),
 }));
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -37,7 +44,7 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
-  const setSession = useAuth((state: any) => state.setSession);
+  const setSession = useAuth((state) => state.setSession);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
