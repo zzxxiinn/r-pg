@@ -10,11 +10,13 @@ import LoginApp from './LoginContext';
 import MultiContextApp from './MultiContext';
 import ReducerContext from './ReducerContext';
 import { CursorBall } from './CursorBall/CursorBall';
-import { UsingRefInsteadOfState } from './UsingRefInsteadOfState';
+import { UsingRefInsteadOfState } from './watchout/UsingRefInsteadOfState';
+import { Form as UseEffectForm } from './useEffect/Form';
 
 export default function App() {
   return (
     <>
+      <UseEffectForm />
       <UsingRefInsteadOfState />
       <CursorBall />
       <ReducerContext />

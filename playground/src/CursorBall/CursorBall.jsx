@@ -9,15 +9,24 @@ export const CursorBall = () => {
   return (
     <div
       onPointerMove={(e) => {
+        // const dom = e.target;
+        // let domToTop = dom.getBoundingClientRect().top; // dom 的顶边到视口顶部的距离
+        // let domToLeft = dom.getBoundingClientRect().left; // dom 的左边到视口左边的距离
+        // let domToBottom = dom.getBoundingClientRect().bottom; // dom 的底边到视口顶部的距离
+        // let domToRight = dom.getBoundingClientRect().right; // dom 的右边到视口左边的距离
+
         setPosition({
-          x: e.clientX - 20,
-          y: e.clientY - 20
+          x: e.clientX,
+          y: e.clientY
         });
       }}
       style={{
-        position: 'relative',
-        width: '500px',
-        height: '500px'
+        position: 'fixed',
+        zIndex: 0,
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0
       }}
     >
       <div
