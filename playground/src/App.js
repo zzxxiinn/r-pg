@@ -10,10 +10,12 @@ import LoginApp from './LoginContext';
 import MultiContextApp from './MultiContext';
 import ReducerContext from './ReducerContext';
 import { CursorBall } from './CursorBall/CursorBall';
+import { UsingRefInsteadOfState } from './UsingRefInsteadOfState';
 
 export default function App() {
   return (
     <>
+      <UsingRefInsteadOfState />
       <CursorBall />
       <ReducerContext />
       <MultiContextApp />
