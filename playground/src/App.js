@@ -9,10 +9,12 @@ import ThemeApp from './ThemeContext';
 import LoginApp from './LoginContext';
 import MultiContextApp from './MultiContext';
 import ReducerContext from './ReducerContext';
+import { CursorBall } from './CursorBall/CursorBall';
 
 export default function App() {
   return (
     <>
+      <CursorBall />
       <ReducerContext />
       <MultiContextApp />
       <LoginApp />
