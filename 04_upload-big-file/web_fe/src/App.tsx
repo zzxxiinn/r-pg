@@ -1,35 +1,24 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { FormEvent } from 'react';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
+  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
+    event.preventDefault();
+    console.log(event);
+    console.log(inputRef.current?.files);
+    console.log(Object.prototype.toString.call(inputRef.current?.files));
+    console.log(inputRef.current?.files?.[0] instanceof File);
+  }
+
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <form onSubmit={handleSubmit}>
+      <label htmlFor='file'>选择文件</label>
+      <input id='file' type='file' ref={inputRef} multiple={false} />
+      <button type='submit'>提交</button>
+    </form>
+  );
 }
 
-export default App
+export default App;
