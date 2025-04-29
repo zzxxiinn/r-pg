@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
-import express, { Express, Request, Response } from 'express';
+import express, { Express } from 'express';
 import cors from 'cors';
-import { chatRoutes } from './src/cahtRoute';
+import { chatRoutes } from './src/chatRoute';
 
 dotenv.config();
 
