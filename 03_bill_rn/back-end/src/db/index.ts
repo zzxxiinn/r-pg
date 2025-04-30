@@ -15,10 +15,10 @@ export const createRecord = async (
   userId: string,
   amount: number,
   title: string,
-  data: Date
+  date: Date
 ) => {
   // YYYY-MM-DD
-  const dateObj = new Date();
+  const dateObj = new Date(date);
   const amountInCents = amount * 100;
 
   try {
@@ -38,6 +38,7 @@ export const createRecord = async (
 export const getRecords = async (userId: string, date: string) => {
   // YYYY-MM-DD
   const dateObj = new Date(date);
+
   try {
     const records = await db
       .select()
@@ -46,12 +47,8 @@ export const getRecords = async (userId: string, date: string) => {
         and(eq(recordsTable.userId, userId), eq(recordsTable.date, dateObj))
       );
 
-    // records 金额 / 100
-    // return records.map((records) => {
-    //   records.amount = records.amount / 100;
-    // });
-    records.forEach((records) => {
-      records.amount = records.amount / 100;
+    records.forEach((record) => {
+      record.amount = record.amount / 100;
     });
     return records;
   } catch (err) {

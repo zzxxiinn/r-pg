@@ -3,6 +3,7 @@ import { fetch as expoFetch } from 'expo/fetch';
 import { View, TextInput, ScrollView, Text, SafeAreaView } from 'react-native';
 import { useAuth } from '../_layout';
 import RecordCard from '@/components/RecordCard';
+import { useRecord } from './index';
 
 const renderMessage = (message: Message) => {
   if (message.role === 'assistant' && message.id !== '1') {
@@ -22,6 +23,8 @@ const renderMessage = (message: Message) => {
 export default function ExploreScreen() {
   const session = useAuth((state) => state.session);
 
+  const fetchRecords = useRecord((state) => state.fetchRecord);
+
   const { messages, error, handleInputChange, input, handleSubmit } = useChat({
     fetch: expoFetch as unknown as typeof globalThis.fetch,
     api: `${process.env.EXPO_PUBLIC_API_URL}/chat`,
@@ -37,6 +40,16 @@ export default function ExploreScreen() {
         content: '今天好呀，请问你要记录什么样的消费?',
       },
     ],
+    onFinish: (message, options) => {
+      console.log('message ->', message);
+      console.log('options ->', options);
+      try {
+        const parsedMessage = JSON.parse(message.content);
+        if (!parsedMessage.text) {
+          fetchRecords(new Date(), session!);
+        }
+      } catch (error) {}
+    },
   });
 
   if (error) return <Text>{error.message}</Text>;
