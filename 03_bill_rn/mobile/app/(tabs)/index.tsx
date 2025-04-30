@@ -25,11 +25,19 @@ export const useRecord = create<RecordStore>((set) => ({
     if (!session?.user?.id) {
       return;
     }
+
+    const headers = {
+      Authorization: `Bearer ${session.access_token}`,
+    };
     axios
-      .post(`${process.env.EXPO_PUBLIC_API_URL}/records`, {
-        user_id: session.user.id,
-        date: date.toISOString().split('T')[0],
-      })
+      .post(
+        `${process.env.EXPO_PUBLIC_API_URL}/records`,
+        {
+          user_id: session.user.id,
+          date: date.toISOString().split('T')[0],
+        },
+        { headers }
+      )
       .then(({ data }) => {
         console.log('res.data ->', data);
 

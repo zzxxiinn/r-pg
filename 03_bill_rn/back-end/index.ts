@@ -3,6 +3,7 @@ import express, { Express } from 'express';
 import cors from 'cors';
 import { chatRoutes } from './src/chatRoute';
 import { recordRoute } from './src/recordRoute';
+import { authMiddleware } from './src/middleware/auth.middleware';
 
 dotenv.config();
 

@@ -1,9 +1,11 @@
 import express from 'express';
 import { getRecords } from './db';
+import { authMiddleware } from './middleware/auth.middleware';
 
 export const recordRoute = express.Router();
 
-recordRoute.post('/', async (req, res) => {
+// localhost:8000/records/
+recordRoute.post('/', authMiddleware, async (req, res) => {
   const { user_id, date } = req.body;
 
   try {

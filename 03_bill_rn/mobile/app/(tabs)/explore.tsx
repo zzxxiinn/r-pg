@@ -30,6 +30,9 @@ export default function ExploreScreen() {
     api: `${process.env.EXPO_PUBLIC_API_URL}/chat`,
     onError: (error) => console.error(error, 'ERROR'),
     streamProtocol: 'text',
+    headers: {
+      Authorization: `Bearer ${session?.access_token}`,
+    },
     body: {
       user_id: session?.user?.id,
     },

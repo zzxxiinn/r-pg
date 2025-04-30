@@ -11,8 +11,9 @@ type RecordCardProps = {
 const RecordCard = ({ record }: { record: RecordCardProps }) => {
   return (
     <View
-      className='p-4 mt-3'
       style={{
+        padding: 16,
+        marginTop: 12,
         borderRadius: 8,
         backgroundColor: 'white',
         shadowColor: '#000',
