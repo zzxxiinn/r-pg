@@ -10,7 +10,21 @@ type RecordCardProps = {
 
 const RecordCard = ({ record }: { record: RecordCardProps }) => {
   return (
-    <View className='bg-white p-4 mt-3 shadow-sm rounded-xl'>
+    <View
+      className='p-4 mt-3'
+      style={{
+        borderRadius: 8,
+        backgroundColor: 'white',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 1,
+        },
+        shadowOpacity: 0.18,
+        shadowRadius: 1.0,
+        elevation: 1,
+      }}
+    >
       <View className='flex-row justify-between items-center'>
         <Text className='text-lg font-semibold text-gray-800 flex-1'>
           {record.title}
